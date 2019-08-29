@@ -1,4 +1,4 @@
-# timeline
+# Timeline
 
 ## Project setup
 ```
