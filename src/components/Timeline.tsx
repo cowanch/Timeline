@@ -1,12 +1,18 @@
 import { useState } from 'react'
 import type { EventDraft } from '../types'
-import { useTimeline } from '../hooks/useTimeline'
+import { useDocumentContext } from '../context/DocumentContext'
 import { EventEditor } from './EventEditor'
 import { TimelineEventCard } from './TimelineEventCard'
 
 export function Timeline() {
-  const { events, addEvent, insertBefore, insertAfter, updateEvent, deleteEvent } =
-    useTimeline()
+  const {
+    events,
+    addEvent,
+    insertBefore,
+    insertAfter,
+    updateEvent,
+    deleteEvent,
+  } = useDocumentContext()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [newEventDraft, setNewEventDraft] = useState<EventDraft | null>(null)
 

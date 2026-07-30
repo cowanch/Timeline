@@ -1,26 +1,57 @@
 # Story Timeline
 
-A visual timeline editor for writers to map out the events of their story in chronological order.
+A visual timeline editor for writers to map out the events of their story in chronological order. Runs as a **desktop app** (via Tauri) or in the browser for development.
 
 ## Features
 
 - **Add events** — Start with your first event or append to the end of the timeline
 - **Edit title & description** — Click Edit on any event to update its details
 - **Insert before / after** — Add new events at any position in the sequence
-- **Auto-save** — Your timeline persists in the browser via localStorage
+- **Save & open files** — Desktop app saves `.timeline` documents to disk (like Word)
+- **Native File menu** — New, Open, Save, Save As from the menu bar
 
-## Getting Started
+## Desktop app (recommended)
+
+Requires [Rust](https://rustup.rs/) installed on your machine.
 
 ```bash
 npm install
+npm run tauri:dev
+```
+
+This opens Story Timeline in its own window with file save/open support.
+
+### Build a Windows installer
+
+```bash
+npm run tauri:build
+```
+
+The installer and `.exe` will be in `src-tauri/target/release/bundle/`.
+
+## Web dev mode
+
+For quick UI development without the desktop shell:
+
+```bash
 npm run dev
 ```
 
-Open the URL shown in the terminal (typically `http://localhost:5173`).
+In browser mode, timelines auto-save to localStorage instead of files.
 
-## Build
+## File format
 
-```bash
-npm run build
-npm run preview
+Timelines are saved as JSON with a `.timeline` extension:
+
+```json
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "...",
+      "title": "The Discovery",
+      "description": "Maya finds the ancient map..."
+    }
+  ]
+}
 ```
