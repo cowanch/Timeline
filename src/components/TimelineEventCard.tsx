@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import type { EventDraft, TimelineEvent } from '../types'
-import { EventEditor } from './EventEditor'
+import { useState, useRef } from 'react';
+import type { EventDraft, TimelineEvent } from '../types';
+import { EventEditor } from './EventEditor';
+import { useSortable } from '@dnd-kit/react/sortable';
 
 interface TimelineEventCardProps {
   event: TimelineEvent
@@ -30,7 +31,13 @@ export function TimelineEventCard({
   const [draft, setDraft] = useState<EventDraft>({
     title: event.title,
     description: event.description,
-  })
+  });
+
+  const [element, setElement] = useState<Element | null>(null);
+
+  const handleRef = useRef<HTMLButtonElement | null>(null);
+
+  const { isDragging } = useSortable({id: event.id, index, element, handle: handleRef});
 
   const isEditing = editingId === event.id
 
@@ -70,10 +77,13 @@ export function TimelineEventCard({
             onDelete={handleDelete}
           />
         ) : (
-          <article className="event-card">
-            <h3 className="event-title">
-              {event.title || <span className="placeholder">Untitled event</span>}
-            </h3>
+          <article className="event-card" ref={setElement}>
+            <div className="event-header">
+              <h3 className="event-title">
+                {event.title || <span className="placeholder">Untitled event</span>}
+              </h3>
+              <button ref={handleRef} className="btn btn-ghost btn-sm drag-handle"/>
+            </div>
             {event.description && (
               <p className="event-description">{event.description}</p>
             )}
