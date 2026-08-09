@@ -1,7 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Story Timeline",
-  "version": "0.1.0",
   "identifier": "com.storytimeline.app",
   "build": {
     "frontendDist": "../dist",
