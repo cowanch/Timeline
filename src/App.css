@@ -65,6 +65,10 @@
   min-height: 0;
 }
 
+.timeline-item:not(:has(~ .timeline-item)) .timeline-line {
+  display: none;
+}
+
 .timeline-marker {
   display: flex;
   flex-direction: column;

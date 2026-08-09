@@ -179,6 +179,19 @@ export function useDocument() {
     [markDirty],
   )
 
+  const moveEvents = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      setEvents((prev) => {
+        const next = [...prev]
+        const [moved] = next.splice(fromIndex, 1)
+        next.splice(toIndex, 0, moved)
+        return next
+      });
+      markDirty()
+    },
+    [markDirty],
+  )
+
   return {
     events,
     filePath,
@@ -193,5 +206,6 @@ export function useDocument() {
     insertAfter,
     updateEvent,
     deleteEvent,
+    moveEvents,
   }
 }

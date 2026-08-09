@@ -2,6 +2,9 @@ import { useState } from 'react'
 import type { EventDraft } from '../types'
 import { useDocumentContext } from '../context/DocumentContext'
 import { EventEditor } from './EventEditor'
+import { TimelineItem } from './TimelineItem'
+import { DragDropProvider, DragOverlay } from '@dnd-kit/react'
+import { isSortable } from '@dnd-kit/react/sortable'
 import { TimelineEventCard } from './TimelineEventCard'
 
 export function Timeline() {
@@ -12,6 +15,7 @@ export function Timeline() {
     insertAfter,
     updateEvent,
     deleteEvent,
+    moveEvents,
   } = useDocumentContext()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [newEventDraft, setNewEventDraft] = useState<EventDraft | null>(null)
@@ -75,21 +79,46 @@ export function Timeline() {
               </div>
             )}
 
-            {events.map((event, index) => (
-              <TimelineEventCard
-                key={event.id}
-                event={event}
-                index={index}
-                isLast={index === events.length - 1}
-                onUpdate={updateEvent}
-                onDelete={deleteEvent}
-                onInsertBefore={startInsertBefore}
-                onInsertAfter={startInsertAfter}
-                editingId={editingId}
-                onStartEdit={setEditingId}
-                onStopEdit={() => setEditingId(null)}
-              />
-            ))}
+            <DragDropProvider
+              onDragEnd={(event) => {
+                if (event.canceled) return
+                const { source } = event.operation
+                if (isSortable(source) && source.initialIndex !== source.index) {
+                  moveEvents(source.initialIndex, source.index)
+                }
+              }}
+            >
+              {events.map((event, index) => (
+                <TimelineItem
+                  key={event.id}
+                  event={event}
+                  index={index}
+                  onUpdate={updateEvent}
+                  onDelete={deleteEvent}
+                  onInsertBefore={startInsertBefore}
+                  onInsertAfter={startInsertAfter}
+                  editingId={editingId}
+                  onStartEdit={setEditingId}
+                  onStopEdit={() => setEditingId(null)}
+                />
+              ))}
+
+              <DragOverlay>
+                {(source) => {
+                  const event = events.find((e) => e.id === source.id)
+                  if (!event) return null
+                  return (
+                    <TimelineEventCard
+                      event={event}
+                      handleRef={() => {}}
+                      onBeforeClicked={() => {}}
+                      onAfterClicked={() => {}}
+                      onEditClicked={() => {}}
+                    />
+                  )
+                }}
+              </DragOverlay>
+            </DragDropProvider>
           </div>
 
           {events.length > 0 && (
