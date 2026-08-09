@@ -34,7 +34,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.event_name == 'push' && github.ref_name || format('manual-build-{0}', github.run_number) }}
-          releaseName: ${{ github.event_name == 'push' && 'v__VERSION__' || format('Manual test build #{0}', github.run_number) }}
+          releaseName: "${{ github.event_name == 'push' && 'v__VERSION__' || format('Manual test build #{0}', github.run_number) }}"
           releaseBody: 'See the assets below to download this version.'
           releaseDraft: ${{ github.event_name != 'push' }}
           prerelease: false
