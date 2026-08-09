@@ -1,7 +1,7 @@
 import { useDocumentContext } from '../context/DocumentContext'
 
 function fileLabel(filePath: string | null, isDirty: boolean): string {
-  const name = filePath ? filePath.split(/[/\\]/).pop() : 'Untitled'
+  const name = filePath?.split(/[/\\]/).pop() ?? 'Untitled'
   return isDirty ? `${name} *` : name
 }
 
